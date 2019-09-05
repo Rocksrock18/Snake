@@ -28,12 +28,15 @@ class Snake():
             self.nn = neural_net
             self.delay = 0
 
+    #kills snake
     def die(self):
         self.alive = False
 
+    #sets direction of snake
     def set_direction(self,direction):
         self.direction = direction
 
+    #removes the square at back of snake
     def remove_tail(self):
         tail = self.body.pop(len(self.body)-1)
         tail.ht()
@@ -41,6 +44,7 @@ class Snake():
         tail_pos = self.body_positions.pop(len(self.body_positions)-1)
         self.empty_spaces.append((int(tail_pos[0]),int(tail_pos[1])))
 
+    #adds a square at the old head location
     def new_top_body(self,xcor,ycor):
         self.body.insert(0,turtle.Turtle())
         self.body[0].shape("square")
@@ -49,6 +53,7 @@ class Snake():
         self.body[0].setpos(xcor,ycor)
         self.body_positions.insert(0,(xcor,ycor))
 
+    #performs 1 move for the snake
     def move(self):
         self.moves_till_death -= 1
         self.total_moves += 1
@@ -66,6 +71,7 @@ class Snake():
         self.new_top_body(oldx,oldy)
         newx = int(self.head.xcor())
         newy = int(self.head.ycor())
+        #if moved to food location
         if newx == int(self.food.xcor()) and newy == int(self.food.ycor()):
             self.score += 5
             self.moves_till_death = 500
@@ -74,6 +80,7 @@ class Snake():
             self.food.setpos(self.empty_spaces[new_loc][0], self.empty_spaces[new_loc][1])
         else:
             self.remove_tail()
+            #checks for death
             if self.empty_spaces.count((newx,newy)) == 0:
                 self.die()
             elif self.moves_till_death == 0:
@@ -81,6 +88,7 @@ class Snake():
             else:
                 self.empty_spaces.remove((newx,newy))
 
+    #sets direction based on which key is pressed
     def on_press(self, key):
         if self.controllable:
             if key == keyboard.Key.up:
@@ -97,9 +105,11 @@ class Snake():
     def on_release(self,key):
         pass
 
+    #calculates number of moves it would take to reach food, assuming clear path
     def distance_to_food(self, head_x, head_y):
         return abs(self.food.xcor()-head_x)/20 + abs(self.food.ycor()-head_y)/20
 
+    #generate the inputs for the neural network based on information of the game state
     def generate_nn_inputs(self, head_x, head_y):
         inputs = []
         og_x = int(head_x)
@@ -109,6 +119,8 @@ class Snake():
         xl = int(head_x-20)
         yu = int(head_y+20)
         yd = int(head_y-20)
+
+        #looks to see which directions are safe. Appending a 1 = safe, 0 = death.
         #looks right
         if self.empty_spaces.count((xr, og_y)) == 0:
             inputs.append(0)
@@ -129,7 +141,7 @@ class Snake():
             inputs.append(0)
         else:
             inputs.append(1)
-        #looks for food
+        #looks for food, Appends a 1 if food is in that direction, a 0 otherwise
         if self.food.xcor() >= xr:
             inputs.append(1)
         else:
@@ -146,13 +158,16 @@ class Snake():
             inputs.append(1)
         else:
             inputs.append(0)
+        #adds input on how many moves are available until death
         inputs.append(self.moves_till_death/500.0)
         return inputs
 
+    #plays a full game of snake
     def new_game(self):
         listener = keyboard.Listener(on_press=self.on_press,on_release=self.on_release)
         listener.start()
         self.window = turtle.Screen()
+        #puts game window on top
         rootwindow = self.window.getcanvas().winfo_toplevel()
         rootwindow.call('wm', 'attributes', '.', '-topmost', '1')
         rootwindow.call('wm', 'attributes', '.', '-topmost', '0')
@@ -160,11 +175,13 @@ class Snake():
         self.window.update()
         while self.alive:
             time.sleep(self.delay)
+            #if human is controlling snake
             if self.controllable:
                 self.move()
             else:
                 old_distance = self.distance_to_food(self.head.xcor(),self.head.ycor())
                 inputs = self.generate_nn_inputs(self.head.xcor(),self.head.ycor())
+                #performs forward propogation to get the neural networks prediction for the best move
                 result = ga.full_forward_prop(self.nn, inputs)
                 if result == 0:
                     self.set_direction("up")
@@ -176,22 +193,27 @@ class Snake():
                     self.set_direction("left")
                 self.move()
                 new_distance = self.distance_to_food(self.head.xcor(),self.head.ycor())
+                #adjusts score for neural network
                 if new_distance < old_distance:
                     self.score += .01
                 else:
                     self.score -= .015
+            #updates game screen
             self.window.update()
         if self.controllable:
             print("\nYou died...")
             time.sleep(3)
         self.reset_window()
+        #returns the score with a bonus added for how long the snake stayed alive
         return self.score + self.total_moves/250.0
 
+    #resets the game window
     def reset_window(self):
         self.window.clear()
         self.window.reset()
         self.window.bgcolor("black")
 
+    #sets up the game window
     def initialize_game(self):
         #initialize window
         self.window.title("Snake")
