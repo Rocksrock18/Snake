@@ -7,9 +7,9 @@ Uses a genetic algorithm with a neural network to train the computer to play sna
 You play as a snake, where your goal is to become as long as possible.
 Eating food makes your snake longer.
 
-If the snake runs into a wall or itself, it dies.
+* If the snake runs into a wall or itself, it dies.
 
-If the snake goes 500 moves without getting food, it dies.
+* If the snake goes 500 moves without getting food, it dies.
 
 ### Controls
 
