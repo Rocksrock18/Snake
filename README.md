@@ -17,13 +17,15 @@ The snake moves on its own, but its direction is controlled using the arrow keys
 
 ## Training Computer
 
-You can also choose to let the computer learn to play.
+You can choose to let the computer learn to play.
 
 When doing so, the computer will simulate a number of generations with random snake AIs.
 
 * **Note** - Depending on how many generations you simulate, training can take a long time.
 
 After the training completes, the computer will keep the best snake from the last generation. You can then play a normal game with the trained snake.
+
+### Choosing How Many Generations to Simulate
 
 ### Genetic Algortihm
 
