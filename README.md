@@ -21,9 +21,9 @@ You can also choose to let the computer learn to play.
 
 When doing so, the computer will simulate a number of generations with random snake AIs.
 
-* **Note** - Depending on how many generations you simulate, training can take a long time. Smart snakes typically form by generation 30.
+* **Note** - Depending on how many generations you simulate, training can take a long time.
 
-After the training completes, the computer will keep the best snake from the last generation. You can then play a normal snake game with the trained snake.
+After the training completes, the computer will keep the best snake from the last generation. You can then play a normal game with the trained snake.
 
 ### Genetic Algortihm
 
