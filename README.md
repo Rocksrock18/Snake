@@ -15,7 +15,7 @@ If the snake goes 500 moves without getting food, it dies.
 
 The snake moves on its own, but its direction is controlled using the arrow keys.
 
-### Training Computer
+## Training Computer
 
 You can also choose to let the computer learn to play.
 
