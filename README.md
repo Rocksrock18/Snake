@@ -27,6 +27,13 @@ After the training completes, the computer will keep the best snake from the las
 
 ### Choosing How Many Generations to Simulate
 
+Depending on how many generations you simulate, you will begin to see different snake behaviors.
+
+* Generations 0-20: Most snakes in these generations die quickly. Best performers typically are very agressive in going for food, but havent learned to avoid themselves. **Time needed: ~20 minutes**
+* Generations 20-30: Snakes begin to learn to go for food in a "circle" so that they can avoid their bodies more often. Still normal for most snakes to die quickly. **Time needed: ~45 minutes**
+* Generations 30-40: Less and less snakes die quickly, meaning each generation can take a while. Best performers are better at avoiding themselves. **Time needed: ~2 hours**
+* Generation 40+: Best performers can reliably avoid themselves in most cases. Progress will likely begin to stagnate after a while. **Time needed: A lot**
+
 ### Genetic Algortihm
 
 Explain what these tests test and why
